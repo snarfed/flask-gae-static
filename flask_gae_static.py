@@ -5,8 +5,10 @@ https://cloud.google.com/appengine/docs/standard/python3/config/appref
 """
 import logging
 from pathlib import Path
+import re
 
-from flask import current_app, send_from_directory, send_file
+from flask import current_app, request, send_file, send_from_directory
+from werkzeug.routing import BaseConverter
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -14,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 def init_app(app):
     """Load app.yaml and register a URL rule for each static handler."""
+    app.url_map.converters['regex'] = RegexConverter
+
     with open(Path(app.root_path) / 'app.yaml', 'r') as f:
         config = yaml.safe_load(f)
 
@@ -25,6 +29,7 @@ def init_app(app):
             continue
 
         url = route['url']
+        # TODO: handle url regexps that overlap with app.static_url_path
         if url == app.static_url_path:
             logger.warning(f"Overriding Flask's built in static handler for {url}")
             app.view_functions[app.static_url_path] = None
@@ -36,10 +41,11 @@ def init_app(app):
             rule = str(Path(url) / '<path:file>')
             logger.info(f'Registering {rule} to serve {dir}/*')
             app.add_url_rule(rule, endpoint=url, view_func=static_dir(dir))
-        # TODO: handle regexps
+
         elif files:
-            logger.info(f'Registering {url} to serve {files}')
-            app.add_url_rule(url, endpoint=url, view_func=static_file(files))
+            rule = f'/<regex("{url.lstrip("/")}"):_>'
+            logger.info(f'Registering {rule} to serve {files}')
+            app.add_url_rule(rule, endpoint=url, view_func=static_file(url, files))
 
 
 def static_dir(dir):
@@ -49,8 +55,26 @@ def static_dir(dir):
     return wrapped
 
 
-def static_file(path):
-    def wrapped():
-        return send_file(Path(current_app.root_path) / path)
+def static_file(url_pattern, files_replacement):
+    def wrapped(_):
+        path = (Path(current_app.root_path) /
+                re.sub(url_pattern, files_replacement, request.path))
+        return send_file(path) if path.exists() else ('', 404)
 
     return wrapped
+
+
+class RegexConverter(BaseConverter):
+  """Regexp URL route for Werkzeug/Flask.
+
+  Based on https://github.com/rhyselsmore/flask-reggie.
+
+  Usage: @app.route('/<regex("(abc|def)"):letters>')
+
+  Install with:
+    app = Flask(...)
+    app.url_map.converters['regex'] = RegexConverter
+  """
+  def __init__(self, url_map, *items):
+    super(RegexConverter, self).__init__(url_map)
+    self.regex = items[0]

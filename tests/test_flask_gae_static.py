@@ -9,7 +9,7 @@ import flask_gae_static
 class TestFlaskGAEStatic(TestCase):
     def setUp(self):
         super().setUp()
-        app = Flask('test_flask_gae_static', root_path=os.path.dirname(__file__))
+        app = Flask('test', root_path=os.path.dirname(__file__))
         flask_gae_static.init_app(app)
 
         @app.route('/')
@@ -23,16 +23,24 @@ class TestFlaskGAEStatic(TestCase):
         self.client.__exit__(None, None, None)
         super().tearDown()
 
-    def test_normal_route(self):
-        for path, contents in (
-                ('/', 'home'),
-                ('/file.txt', 'some text'),
-                ('/other/bar', 'bar'),
-                ('/other/inner/baz', 'baz'),
-                ('/static/foo', 'foo'),
+    def test_routes(self):
+        for path, status, contents in (
+                ('/', 200, 'home'),
+                ('/shrug', 404, None),
+                ('/file.txt', 200, 'some text'),
+                ('/file.txty', 404, None),
+                ('/other/bar', 200, 'bar'),
+                ('/other/biff', 404, None),
+                ('/other/inner/baz', 200, 'baz'),
+                ('/static/foo', 200, 'foo'),
+                ('/static/phoo', 404, 'phoo'),
+                ('/x.dat', 200, 'my-x'),
+                ('/y.dat', 200, 'my-y'),
+                ('/z.dat', 404, None),
         ):
             with self.subTest(path=path):
                 resp = self.client.get(path)
-                self.assertEqual(200, resp.status_code)
-                self.assertEqual(contents, resp.get_data(as_text=True).strip())
+                self.assertEqual(status, resp.status_code)
+                if status == 200:
+                    self.assertEqual(contents, resp.get_data(as_text=True).strip())
                 resp.close()
