@@ -1,9 +1,6 @@
 """setuptools setup module for flask-gae-static.
 
-Docs:
-https://packaging.python.org/en/latest/distributing.html
-https://setuptools.readthedocs.io/
-https://www.python.org/dev/peps/pep-0440/#version-specifiers
+Docs: https://setuptools.readthedocs.io/
 """
 from setuptools import setup, find_packages
 
@@ -14,8 +11,7 @@ setup(name='flask-gae-static',
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
       url='https://github.com/snarfed/flask-gae-static',
-      packages=find_packages(),
-      include_package_data=True,
+      py_modules=['flask-gae-static'],
       author='Ryan Barrett',
       author_email='flask-gae-static@ryanb.org',
       license='Public domain',
