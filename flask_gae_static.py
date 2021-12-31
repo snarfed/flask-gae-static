@@ -18,23 +18,28 @@ def init_app(app):
         config = yaml.safe_load(f)
 
     for route in config.get('handlers', []):
+        dir = route.get('static_dir')
+        files = route.get('static_files')
+
+        if not dir and not files:
+            continue
+
         url = route['url']
+        if url == app.static_url_path:
+            logger.warning(f"Overriding Flask's built in static handler for {url}")
+            app.view_functions[app.static_url_path] = None
+            for rule in app.url_map.iter_rules('static'):
+                app.url_map._rules.remove(rule)
+            app.url_map._rules_by_endpoint['static'] = []
 
-        if path := route.get('static_dir'):
-            if url == app.static_url_path:
-                logger.warning(f"Overriding Flask's built in static handler for {url}")
-                app.view_functions[app.static_url_path] = None
-                for rule in app.url_map.iter_rules('static'):
-                    app.url_map._rules.remove(rule)
-                app.url_map._rules_by_endpoint['static'] = []
-
+        if dir:
             rule = str(Path(url) / '<path:file>')
-            logger.info(f'Registering {rule} to serve {path}/*')
-            app.add_url_rule(rule, endpoint=path, view_func=static_dir(path))
-
-        elif path := route.get('static_files'):
-            logger.info(f'Registering {url} to serve {path}')
-            app.add_url_rule(url, endpoint=path, view_func=static_file(path))
+            logger.info(f'Registering {rule} to serve {dir}/*')
+            app.add_url_rule(rule, endpoint=url, view_func=static_dir(dir))
+        # TODO: handle regexps
+        elif files:
+            logger.info(f'Registering {url} to serve {files}')
+            app.add_url_rule(url, endpoint=url, view_func=static_file(files))
 
 
 def static_dir(dir):

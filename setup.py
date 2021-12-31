@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 
 setup(name='flask-gae-static',
       version='0.1',
-      description='Flask extension for Google App Engine that serves static file handlers from app.yaml files',
+      description='Flask extension that serves static file handlers in Google App Engine app.yaml files',
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
       url='https://github.com/snarfed/flask-gae-static',
