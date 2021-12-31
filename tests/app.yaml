@@ -1,0 +1,17 @@
+# app.yaml reference docs:
+# https://cloud.google.com/appengine/docs/standard/python3/config/appref
+runtime: python39
+handlers:
+
+- url: /static
+  static_dir: staticky
+
+- url: /other
+  static_dir: other
+
+- url: .*
+  script: auto
+  secure: always
+
+- url: /file.txt
+  static_files: a-file.txt
