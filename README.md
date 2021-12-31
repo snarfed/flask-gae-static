@@ -1,4 +1,4 @@
-flask-gae-static
+flask-gae-static ![unit tests badge](https://github.com/snarfed/flask-gae-static/actions/workflows/unit-tests.yml/badge.svg)
 ===
 
 [Flask](https://flask.palletsprojects.com/) extension for [Google App Engine](https://cloud.google.com/appengine/) that serves static file handlers from [`app.yaml` files](https://cloud.google.com/appengine/docs/standard/python3/config/appref).
