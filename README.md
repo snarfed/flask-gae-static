@@ -3,6 +3,8 @@ flask-gae-static ![unit tests badge](https://github.com/snarfed/flask-gae-static
 
 [Flask](https://flask.palletsprojects.com/) extension for [Google App Engine](https://cloud.google.com/appengine/) that serves static file handlers from [`app.yaml` files](https://cloud.google.com/appengine/docs/standard/python3/config/appref).
 
+App Engine's built in static file serving is better in most ways than serving static files via app code: it uses Google Cloud's CDN, which is generally faster, cheaper, more scalable, and more secure. However, App Engine's [`dev_appserver` local server](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app#local-dev-server) is [deprecated](https://cloud.google.com/appengine/docs/standard/python3/testing-and-deploying-your-app) and [degrading](https://issuetracker.google.com/issues?q=%22dev_appserver%22), and Google hasn't provided a replacement for local development that supports `app.yaml`-based static file handlers. This extension fills that gap.
+
 Inspired by [Andreas H. Kelch](https://github.com/XeoN-GHMB)'s [app_server](https://github.com/XeoN-GHMB/app_server) project.
 
 License: This project is placed in the public domain. You may also use it under the [CC0 public domain dedication](http://creativecommons.org/publicdomain/zero/1.0/).
