@@ -2,7 +2,7 @@
 
 Docs: https://setuptools.readthedocs.io/
 """
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 setup(name='flask-gae-static',
@@ -27,6 +27,7 @@ setup(name='flask-gae-static',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Topic :: Software Development :: Libraries :: Python Modules',
+          'Framework :: Flask',
       ],
       keywords=['flask', 'App Engine', 'Google App Engine', 'app.yaml',
                 'static', 'files', 'directories'],
