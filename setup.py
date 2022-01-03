@@ -15,6 +15,7 @@ setup(name='flask-gae-static',
       author='Ryan Barrett',
       author_email='flask-gae-static@ryanb.org',
       license='Public domain',
+      python_requires='>=3.6',
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Intended Audience :: Developers',
