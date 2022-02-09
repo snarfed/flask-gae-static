@@ -1,0 +1,44 @@
+[tool]
+[tool.poetry]
+name = "flask-gae-static"
+version = "0.2"
+description = "Flask extension that serves static file handlers in Google App Engine app.yaml files"
+license = "Public domain"
+keywords = [
+    "App Engine",
+    "Google App Engine",
+    "Flask",
+    "app.yaml",
+    "static",
+    "files",
+    "directories",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Environment :: Web Environment",
+    "License :: OSI Approved :: MIT License",
+    "License :: Public Domain",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Flask",
+]
+homepage = "https://github.com/snarfed/flask-gae-static"
+authors = ["Ryan Barrett <flask-gae-static@ryanb.org>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+flask = ">=2.0"
+pyyaml = "*"
+
+[build-system]
+# for the build_editable hook, for pip install -e .
+# https://github.com/python-poetry/poetry/issues/5056
+# TODO: change this to poetry-core>=1.1.0 once it's released
+requires = ["poetry-core @ git+https://github.com/python-poetry/poetry-core.git@master"]
+build-backend = "poetry.core.masonry.api"
