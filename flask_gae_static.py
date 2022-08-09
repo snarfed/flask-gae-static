@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 def init_app(app):
     """Load app.yaml and register a URL rule for each static handler."""
+    assert app.static_folder is None, 'flask-gae-static requires the Flask app to be constructed with static_folder=None.'
+
     app.url_map.converters['regex'] = RegexConverter
 
     with open(Path(app.root_path) / 'app.yaml', 'r') as f:
@@ -24,18 +26,10 @@ def init_app(app):
     for route in config.get('handlers', []):
         dir = route.get('static_dir')
         files = route.get('static_files')
+        url = route['url']
 
         if not dir and not files:
             continue
-
-        url = route['url']
-        # TODO: handle url regexps that overlap with app.static_url_path
-        if url == app.static_url_path:
-            logger.warning(f"Overriding Flask's built in static handler for {url}")
-            app.view_functions[app.static_url_path] = None
-            for rule in app.url_map.iter_rules('static'):
-                app.url_map._rules.remove(rule)
-            app.url_map._rules_by_endpoint['static'] = []
 
         if dir:
             rule = str(Path(url) / '<path:file>')

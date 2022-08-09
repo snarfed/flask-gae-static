@@ -6,7 +6,7 @@ from setuptools import setup
 
 
 setup(name='flask-gae-static',
-      version='0.2',
+      version='1.0',
       description='Flask extension that serves static file handlers in Google App Engine app.yaml files',
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',

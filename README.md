@@ -18,10 +18,12 @@ Install with `pip install flask-gae-static`. Use with eg:
 from flask import Flask
 import flask_gae_static
 
-app = Flask(...)
+app = Flask(..., static_folder=None)
 flask_gae_static.init_app(app)
 ...
 ```
+
+(`static_folder=None` is required to disable Flask's [built in static file handling](https://flask.palletsprojects.com/en/2.2.x/tutorial/static/) so that flask-gae-static can handle static files under any URL path prefix.)
 
 flask-gae-static also includes a custom [URL route converter](https://flask.palletsprojects.com/en/2.0.x/api/#url-route-registrations) that supports regular expressions. After calling `init_app()`, you can use it with `regex` inside a variable route part, eg:
 
@@ -30,11 +32,6 @@ flask-gae-static also includes a custom [URL route converter](https://flask.pall
 def handle(letters):
   ...
 ```
-
-
-Known issues
----
-* flask-gae-static currently only overrides [Flask's built in static file support](https://flask.palletsprojects.com/en/2.0.x/api/#flask.Flask) if a static handler's URL exactly matches the Flask app's `static_url_path`. If the static handler URL is a regexp that overlaps with it, Flask's `static_url_path` handling will still take precedence.
 
 
 Development
@@ -56,6 +53,14 @@ python -m unittest discover
 
 Changelog
 ---
+### 1.0 - 2021-08-09
+
+**Breaking changes**
+
+Require the `Flask` app to be constructed with `static_folder=None`.
+
+Before this, flask-gae-static tried to disable Flask's static file handling itself, but since it couldn't control the `Flask` initialization, it had to resort to workarounds that depended on Flask and werkzeug internal implementation details, and it broke when those details changed. This avoids that.
+
 ### 0.2 - 2021-12-31
 
 Add support for regexp `url`s and regexp replacement strings in `static_files`.

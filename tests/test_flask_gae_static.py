@@ -9,7 +9,7 @@ import flask_gae_static
 class TestFlaskGAEStatic(TestCase):
     def setUp(self):
         super().setUp()
-        app = Flask('test', root_path=os.path.dirname(__file__))
+        app = Flask('test', root_path=os.path.dirname(__file__), static_folder=None)
         flask_gae_static.init_app(app)
 
         @app.route('/')
