@@ -35,5 +35,6 @@ setup(name='flask-gae-static',
       install_requires=[
           'flask',
           'pyyaml',
+          'werkzeug!=2.2.0,!=2.2.1',
       ],
 )
